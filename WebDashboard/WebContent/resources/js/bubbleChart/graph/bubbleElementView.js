@@ -1,5 +1,5 @@
 
-wgp.DygraphAttribute = [
+wgp.BubbleChartAttribute = [
         "colors",
         "labels",
         "valueRange",
@@ -13,125 +13,59 @@ wgp.DygraphAttribute = [
         "drawPoints",
 		"pointSize",
 		"highlightCircleSize",
-		"xAxisHeight"// イベントを考えてみる
-		// "drawHighlightPointCallback"
-		// "drawPointCallback"
 ];
 
-//var graphMaxNumber = 20;
-//var Colors = [];
+var flag = [true,true,true,true];
+//MapSuccess,MapFailed,ReduceSuccess,ReduceFailedの順で表示用のフラグ
+var Sort_array = ["Map","Reduce"];//タスクの種類
+var Status_array = ["Success","Failed"];//ステータスの種類
+var taskNumber = 655;//タスクの数
 
 BubbleElementView = wgp.DygraphElementView.extend({
+	
 	initialize:function(argument){
 		this.viewType = wgp.constants.VIEW_TYPE.VIEW;
 		this.collection = new BubbleModelCollection();
-		// this.attributes = {};
-		// this.registerCollectionEvent();
-		// this.collection = new GraphModelList();
-
-
-		// this.parentId = argument["parentId"];
-		// this.graphId = argument["graphId"];
-		// this.colors = argument["colors"];
-		//Colors = argument["colors"];
 		this.width = argument["width"];
 		this.height = argument["height"];
-		//this.xAxisHeight = argument["xAxisHeight"];
-		//this.drawPoints = argument["drawPoints"];
-		//this.strokeWidth = argument["strokeWidth"];
-		// this.attributes = argument["attributes"];
-		// this.colors = argument["colors"];
-		// this.maxId = 0;
-		// this.collection = new BubbleModelCollection();
-		// var dataArray = new BubbleModelCollection();
-		// this.registerCollectionEvent();
 		
 		//注意　Start順に渡すこと
-		var dataArray =　[/*{
-			TaskAttemptID : -1,
-			StartTime : -5,
-			FinishTime : 0,
-			Status : null,
-			Sort : null,
-			HostName : null,
-		},*/{
-			TaskAttemptID : 0,
-			StartTime : 3,
-			FinishTime : 22,
-			Status : "Success",
-			Sort : "Map",
-			HostName : "192.168.11.1"
-		},{
-			TaskAttemptID : 1,
-			StartTime : 6,
-			FinishTime : 34,
-			Status : "Failed",
-			Sort : "Map",
-			HostName : "192.168.11.1"
-		},{
-			TaskAttemptID : 2,
-			StartTime : 12,
-			FinishTime : 31,
-			Status : "Success",
-			Sort : "Reduce",
-			HostName : "192.168.11.1"
-		},{
-			TaskAttemptID : 3,
-			StartTime : 18,
-			FinishTime : 31,
-			Status : "Failed",
-			Sort : "Reduce",
-			HostName : "192.168.11.1"
-		},{
-			TaskAttemptID : 4,
-			StartTime : 22,
-			FinishTime : 29,
-			Status : "Success",
-			Sort : "Map",
-			HostName : "192.168.11.1"
-		},{
-			TaskAttemptID : 5,
-			StartTime : 26,
-			FinishTime : 38,
-			Status : "Failed",
-			Sort : "Map",
-			HostName : "192.168.11.1"
-		},{
-			TaskAttemptID : 6,
-			StartTime : 31,
-			FinishTime : 38,
-			Status : "Success",
-			Sort : "Reduce",
-			HostName : "192.168.11.1"
-		},{
-			TaskAttemptID : 7,
-			StartTime : 36,
-			FinishTime : 53,
-			Status : "Failed",
-			Sort : "Reduce",
-			HostName : "192.168.11.1"
-		},{
-			TaskAttemptID : 8,
-			StartTime : 36,
-			FinishTime : 61,
-			Status : "Success",
-			Sort : "Reduce",
-			HostName : "192.168.11.1"
-		}];
-		
-	
-		/*
-		 * ,{ TaskAttemptID : 2, StartTime : 0.9, FinishTime : 9, Status :
-		 * "Success", HostName : "192.168.11.1" },{ TaskAttemptID : 3, StartTime :
-		 * 0.9, FinishTime : 12, Status : "Success", HostName : "192.168.11.1"
-		 * }],[{ TaskAttemptID : 4, StartTime : 0.9, FinishTime : 3, Status :
-		 * "Failed", HostName : "192.168.11.1" },{ TaskAttemptID : 5, StartTime :
-		 * 2.3, FinishTime : 12, Status : "Failed", HostName : "192.168.11.1"
-		 * },{ TaskAttemptID : 6, StartTime : 1.6, FinishTime : 9, Status :
-		 * "Failed", HostName : "192.168.11.1" },{ TaskAttemptID : 7, StartTime :
-		 * 2.3, FinishTime : 1, Status : "Failed", HostName : "192.168.11.1"
-		 * }]];
-		 */
+		var dataArray = [];
+		var SrandTime = 0;
+		for(i = 0 ; i < taskNumber ; i++){
+			SrandTime += parseInt(Math.random()*100);
+			var data = {
+				TaskAttemptID : i,
+				StartTime : SrandTime,
+				FinishTime : SrandTime + parseInt(Math.random()*1000),
+				Status : Status_array[parseInt(Math.random()*2)],
+				Sort : Sort_array[parseInt(Math.random()*2)],
+				HostName : null
+			};
+			if(i == 0){
+				var nullData =　{
+					TaskAttemptID : null,
+					StartTime : SrandTime-300,
+					FinishTime : null,
+					Status : null,
+					Sort : null,
+					HostName : null,
+				}
+				dataArray.push(nullData);
+			}
+			dataArray.push(data);
+			if(i == taskNumber-1){
+				var nullData =　{
+					TaskAttemptID : null,
+					StartTime : SrandTime+300,
+					FinishTime : null,
+					Status : null,
+					Sort : null,
+					HostName : null,
+				}
+				dataArray.push(nullData);
+			}
+		}
 		
 		this.graphId = 0;
 
@@ -148,96 +82,86 @@ BubbleElementView = wgp.DygraphElementView.extend({
         }
 
         this.entity = null;
-		// this.collection = new GraphModelList();
         if(dataArray && dataArray.length > 0){
-        	// alert(dataArray.length);
         	this.addCollection(dataArray);
             this.render();
         }
         this.registerCollectionEvent();
 	},
 	render:function(){
+		//データの取得
 		var data = this.getData();
+		//グラフの生成
 		this.entity = new Dygraph(
 			document.getElementById(this.$el.attr("id")),
-			/*[
-             [1,10,null,null,null],
-             [2,40,80,null,null],
-             [3,null,null,50,null],
-             [4,null,null,null,80]
-           ],*/
-			data,
-			this.getAttributes(wgp.DygraphAttribute)
+			data,this.getAttributes(wgp.BubbleChartAttribute)
 		);
+		//アップデートオプション（形表示用、要修正)
 		this.entity.updateOptions({
 			ReduceSuccess:{
-				pointSize : 7
-	              //drawPointCallback : mouthlessFace(),
-	              //drawHighlightPointCallback : mouthlessFace()
+				//pointSize : 7,
+	            drawPointCallback : mouthlessFace(),
+	            drawHighlightPointCallback : mouthlessFace()
 			},
 			ReduceFailed:{
-				pointSize : 5
+				//pointSize : 5
+	            drawPointCallback : mouthlessFace(),
+	            drawHighlightPointCallback : mouthlessFace()
+			},
+			Null:{//端の点のダミー定義
+				pointSize : 0,
+				highlightCircleSize : 0
 			}
-		});///アップデート
+		});
 		this.entity.resize(this.width, this.height);
 	},
 	onAdd:function(graphModel){
 		var dataArray = [];
-		if(this.collection.length > graphMaxNumber){
-			this.collection.shift(wgp.constants.BACKBONE_EVENT.SILENT);
-		}
-		/*
-		var array = [];
-		array.push("x");
-		array.push("MapSuccess");
-		array.push("MapFailed");
-		array.push("ReduceSuccess");
-		array.push("ReduceFailed");
-		dataArray.push(array);*/
 		
 		_.each(this.collection.models, function(model,index){
-			// 必要なデータだけとってきて表示する（一例）
+			// 必要なデータだけとってきて表示する
 			var modelData = model.get("data");
 			var array = [];
-			
-			
-			var ProcessTime = modelData.FinishTime-modelData.StartTime;		
-			array.push(modelData.StartTime);
+			var ProcessTime = modelData.FinishTime-modelData.StartTime;	
+			if(modelData.TaskAttemptID == null){
+				ProcessTime = null;
+			}
+			//array.push(modelData.StartTime);
 			if(modelData.Status == "Success"){
-				//wgp.DygraphAttribute["colors"] = Colors[0];
-				if(modelData.Sort == "Map"){
-					array.push(ProcessTime);
-					array.push(null);
-					array.push(null);
-					array.push(null);
-				}else{
-					array.push(null);
-					array.push(ProcessTime);
-					array.push(null);
-					array.push(null);
+				if(modelData.Sort == "Map" && flag[0]){
+					array.push(modelData.StartTime,ProcessTime,null,null,null,null);
+				}else if(modelData.Sort == "Reduce" && flag[1]){
+					array.push(modelData.StartTime,null,ProcessTime,null,null,null);
 				}
 			}else if(modelData.Status == "Failed"){				
-				//wgp.DygraphAttribute["colors"] = Colors[1];
-				if(modelData.Sort == "Map"){
-					array.push(null);
-					array.push(null);
-					array.push(ProcessTime);
-					array.push(null);
-				}else{
-					array.push(null);
-					array.push(null);
-					array.push(null);
-					array.push(ProcessTime);
+				if(modelData.Sort == "Map" && flag[2]){
+					array.push(modelData.StartTime,null,null,ProcessTime,null,null);
+				}else if(modelData.Sort == "Reduce" && flag[3]){
+					array.push(modelData.StartTime,null,null,null,ProcessTime,null);
 				}
+			}else{
+				array.push(modelData.StartTime,null,null,null,null,ProcessTime);
 			}
-			// alert(modelData.FinishTime);
-			dataArray.push(array);
+			if(array.length != 0)dataArray.push(array);
 		});
-		// alert(dataArray.length);
 		if(this.entity == null){
 			this.render();
 		}else{
-			this.entity.updateOptions({file: dataArray});
+			this.entity.updateOptions({file: dataArray,
+			ReduceSuccess:{
+				//pointSize : 7,
+	            drawPointCallback : mouthlessFace(),
+	            drawHighlightPointCallback : mouthlessFace()
+			},
+			ReduceFailed:{
+				//pointSize : 5
+	            drawPointCallback : mouthlessFace(),
+	            drawHighlightPointCallback : mouthlessFace()
+			},
+			Null:{//端の点のダミー定義
+				pointSize : 0,
+				highlightCircleSize : 0
+			}});
 		}
 	},
 	addCollection:function(dataArray){
@@ -256,33 +180,26 @@ BubbleElementView = wgp.DygraphElementView.extend({
 			var modelData = model.get("data");
 			var array = [];
 			var ProcessTime = modelData.FinishTime-modelData.StartTime;
-			array.push(modelData.StartTime);
-			if(modelData.Status == "Success"){
-				if(modelData.Sort == "Map"){
-					array.push(ProcessTime);
-					array.push(null);
-					array.push(null);
-					array.push(null);
-				}else{
-					array.push(null);
-					array.push(ProcessTime);
-					array.push(null);
-					array.push(null);
-				}
-			}else if(modelData.Status == "Failed"){
-				if(modelData.Sort == "Map"){
-					array.push(null);
-					array.push(null);
-					array.push(ProcessTime);
-					array.push(null);
-				}else{
-					array.push(null);
-					array.push(null);
-					array.push(null);
-					array.push(ProcessTime);
-				}
+			if(modelData.TaskAttemptID == null){
+				ProcessTime = null;
 			}
-			data.push(array);
+			//array.push(modelData.StartTime);
+			if(modelData.Status == "Success"){
+				if(modelData.Sort == "Map" && flag[0]){
+					array.push(modelData.StartTime,ProcessTime,null,null,null,null);
+				}else if(modelData.Sort == "Reduce" && flag[1]){
+					array.push(modelData.StartTime,null,ProcessTime,null,null,null);
+				}
+			}else if(modelData.Status == "Failed"){				
+				if(modelData.Sort == "Map" && flag[2]){
+					array.push(modelData.StartTime,null,null,ProcessTime,null,null);
+				}else if(modelData.Sort == "Reduce" && flag[3]){
+					array.push(modelData.StartTime,null,null,null,ProcessTime,null);
+				}
+			}else{
+				array.push(modelData.StartTime,null,null,null,null,ProcessTime);
+			}
+			if(array.length != 0)data.push(array);
 		});
 		return data;
 	},
@@ -291,27 +208,64 @@ BubbleElementView = wgp.DygraphElementView.extend({
 	}
 });
 
-var mouthlessFace = function(g, series, ctx, cx, cy, color, radius) {
-	ctx = /*$('#canvas')[0]*/this.getContext("2d");
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = "#000000";
-    ctx.fillStyle = "#FFFF00";
-    ctx.beginPath();
-    ctx.arc(cx, cy, radius, Math.PI * 2, false);
-    ctx.closePath();
-    ctx.stroke();
-    ctx.fill();
+var mouthlessFace = function(g, seriesName, canvasContext, cx, cy, color, pointSize) {
+	//canvas = document.getElementById(this.$el.attr("id"));
+	//ctx = canvas_.getContext("2d");
+	var canvasList = $("canvas");
+	var canvas = canvasList[0];
+	canvasContext = canvas;
+	//color = ["#000000"];
+	//pointSize = 7;
+	//cx = 200;
+	//cy = 400;
+	if ( ! canvas || ! canvas.getContext ) { return false; }
+	ctx = canvas.getContext("2d");
+	/* 三角形を描く */
+	ctx.fillStyle = "#000000";
+	ctx.beginPath();
+	ctx.moveTo(250, 10);
+	ctx.lineTo(300, 90);
+	ctx.lineTo(210, 90);
+	ctx.closePath();
+	/* 三角形を塗りつぶす */
+	ctx.fill();
+}
 
-    ctx.fillStyle = "#000000";
-    ctx.beginPath();
-    ctx.arc(cx - (radius / 3) , cy - (radius / 4), 1, Math.PI * 2, false);
-    ctx.closePath();
-    ctx.stroke();
-    ctx.fill();
 
-    ctx.beginPath();
-    ctx.arc(cx + (radius / 3) , cy - (radius / 4), 1, Math.PI * 2, false);
-    ctx.closePath();
-    ctx.stroke();
-    ctx.fill();
-  };
+var MyView = Backbone.View.extend({
+    el: "#rightTop",
+    events: {
+    	"change input[value='MapSuccess']": "_checkMapSuccess",
+    	"change input[value='MapFailed']": "_checkMapFailed",
+    	"change input[value='ReduceSuccess']": "_checkReduceSuccess",
+    	"change input[value='ReduceFailed']": "_checkReduceFailed"
+    },
+    _checkMapSuccess: function(e) {
+    	if(flag[0]){
+    		flag[0] = false;
+    	}else{
+    		flag[0] = true;
+    	}
+    },
+    _checkMapFailed: function(e) {
+    	if(flag[1]){
+    		flag[1] = false;
+    	}else{
+    		flag[1] = true;
+    	}
+    },
+    _checkReduceSuccess: function(e) {
+    	if(flag[2]){
+    		flag[2] = false;
+    	}else{
+    		flag[2] = true;
+    	}
+    },
+    _checkReduceFailed: function(e) {
+    	if(flag[3]){
+    		flag[3] = false;
+    	}else{
+    		flag[3] = true;
+    	}
+    },
+});

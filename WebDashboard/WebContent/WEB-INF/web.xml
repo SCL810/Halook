@@ -46,7 +46,7 @@
 		<servlet-class>jp.co.acroquest.endosnipe.web.dashboard.servlet.DashBoardNotifyServlet</servlet-class>
 		<init-param>
 			<param-name>collector.property</param-name>
-			<param-value>/Users/TomokiNakamaru/Documents/WebDashboard/conf/collector.properties</param-value>
+			<param-value>C:\AcroWorks\workspace2\WebDashboard\conf\collector.properties</param-value>
 		</init-param>
 		<init-param>
 			<param-name>report.directory</param-name>

@@ -42,7 +42,7 @@
 	<classpathentry kind="var" path="TOMCAT_HOME/lib/jsp-api.jar"/>
 	<classpathentry kind="var" path="TOMCAT_HOME/lib/el-api.jar"/>
 	<classpathentry kind="var" path="TOMCAT_HOME/lib/annotations-api.jar"/>
-	<classpathentry kind="var" path="TOMCAT_HOME/lib/catalina.jar"/>
-	<classpathentry kind="var" path="TOMCAT_HOME/lib/tomcat-coyote.jar"/>
+	<classpathentry kind="lib" path="C:/AcroWorks/Tools/apache-tomcat-7.0.29/lib/catalina.jar"/>
+	<classpathentry kind="lib" path="C:/AcroWorks/Tools/apache-tomcat-7.0.29/lib/tomcat-coyote.jar"/>
 	<classpathentry kind="output" path="WebContent/WEB-INF/classes"/>
 </classpath>
