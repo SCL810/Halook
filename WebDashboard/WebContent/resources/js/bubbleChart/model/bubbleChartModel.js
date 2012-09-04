@@ -9,12 +9,6 @@ var bubbleChartModel = Backbone.Model.extend({
 	idAttribute:"TaskAttemptID"
 });
 
-/*
-var object = new bubbleChartModel({
-	taskAttemptID : 1,
-});
-*/
-
 var BubbleModelCollection = Backbone.Collection.extend({
 	model : bubbleChartModel
 });
